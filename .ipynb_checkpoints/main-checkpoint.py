@@ -58,7 +58,6 @@ def text_generator(state_dict):
 
     generated = 0
     for _ in range(args.nsamples // args.batch_size):
-        print()
         out = sample_sequence(
             model=model, length=args.length,
             context=context_tokens  if not  args.unconditional else None,
