@@ -58,6 +58,7 @@ def text_generator(state_dict):
 
     generated = 0
     for _ in range(args.nsamples // args.batch_size):
+        print()
         out = sample_sequence(
             model=model, length=args.length,
             context=context_tokens  if not  args.unconditional else None,
@@ -74,9 +75,15 @@ def text_generator(state_dict):
             print(text)
 
 if __name__ == '__main__':
-    if os.path.exists('gpt2-pytorch_model.bin'):
-        state_dict = torch.load('gpt2-pytorch_model.bin', map_location='cpu' if not torch.cuda.is_available() else None)
-        text_generator(state_dict)
-    else:
-        print('Please download gpt2-pytorch_model.bin')
-        sys.exit()
+    import glob
+    def get_files(path, extension=".pt"):
+        filenames = []
+        for filename in glob.iglob(f"{path}/**/*{extension}", recursive=True):
+            filenames += [filename]
+        return filenames
+    
+    chkpt_paths = get_files("/Users/karanthakkar/Downloads/models/")
+    
+    #if os.path.exists('gpt2-pytorch_model.bin'):
+    state_dict = torch.load(chkpt_paths[1], map_location='cpu' if not torch.cuda.is_available() else None)
+    text_generator(state_dict)
